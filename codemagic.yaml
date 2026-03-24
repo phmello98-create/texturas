@@ -3,8 +3,8 @@ workflows:
     name: Texturas Android Build
     max_build_duration: 60
     environment:
-      android: true
       java: openjdk11
+      gradle: wrapper
     scripts:
       - name: Assemble Debug APK
         script: |
