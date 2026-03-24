@@ -6,7 +6,6 @@ plugins {
 }
 
 android {
-    namespace = "com.texturas.app"
     compileSdk = 33
     
     defaultConfig {
