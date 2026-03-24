@@ -1,0 +1,22 @@
+workflows:
+  android-workflow:
+    name: Texturas Android Build
+    max_build_duration: 60
+    environment:
+      android: true
+      java: openjdk11
+      gradle: wrapper
+    scripts:
+      - name: Assemble Debug APK
+        script: |
+          ./gradlew assembleDebug --stacktrace
+    artifacts:
+      - build/outputs/**/debug/*.apk
+      - build/outputs/**/release/*.apk
+    publishing:
+      email:
+        recipients:
+          - phmello98-create@users.noreply.github.com  # GitHub no-reply email
+        notify:
+          success: true
+          failure: true
