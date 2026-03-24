@@ -5,11 +5,6 @@ workflows:
     environment:
       android: true
     scripts:
-      - name: Check environment
-        script: |
-          echo "JAVA_HOME=$JAVA_HOME"
-          java -version
-          echo "ANDROID_HOME=$ANDROID_HOME"
       - name: Assemble Debug APK
         script: |
           ./gradlew assembleDebug --stacktrace
