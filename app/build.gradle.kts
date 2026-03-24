@@ -6,12 +6,13 @@ plugins {
 }
 
 android {
-    compileSdk = 33
+    namespace = "com.texturas.app"
+    compileSdk = 34
     
     defaultConfig {
         applicationId = "com.texturas.app"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

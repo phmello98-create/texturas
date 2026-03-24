@@ -2,10 +2,13 @@ workflows:
   android-workflow:
     name: Texturas Android Build
     max_build_duration: 60
+    environment:
+      android_sdk: 34
+      java: 17
     scripts:
-      - name: Clean caches
+      - name: Clean project
         script: |
-          rm -rf ~/.gradle/caches/
+          ./gradlew clean
       - name: Assemble Debug APK
         script: |
           ./gradlew assembleDebug --stacktrace
