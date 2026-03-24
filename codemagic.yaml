@@ -5,7 +5,6 @@ workflows:
     environment:
       android: true
       java: openjdk11
-      gradle: wrapper
     scripts:
       - name: Assemble Debug APK
         script: |
@@ -16,7 +15,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - phmello98-create@users.noreply.github.com  # GitHub no-reply email
+          - phmello98-create@users.noreply.github.com
         notify:
           success: true
           failure: true
