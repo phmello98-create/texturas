@@ -3,35 +3,22 @@ package com.texturas.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LifecycleOwnerAdded
-import androidx.compose.runtime.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.window.AndroidWindowInsets
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.Companion.Navigator
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
-import androidx.navigation.fragment.navArgs
 import com.texturas.R
 import com.texturas.data.datastore.DataStoreUtil
 import com.texturas.ui.moodjournal.JournalScreen
 import com.texturas.ui.onboarding.OnboardingScreen
 import com.texturas.ui.repertoire.RepertoireScreen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateIn
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import androidx.lifecycle.viewmodel.compose.viewModelScope
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -53,12 +40,14 @@ fun App() {
 
     // Check if onboarding has been seen
     LaunchedEffect(Unit) {
-        // We need to run this in a coroutine because DataStoreUtil.hasSeenOnboarding is suspend
-        showOnboarding = lifecycleScope.launchWhenStarted {
-            DataStoreUtil.hasSeenOnboarding(context)
-        }.getOrNull() ?: false
-        // If it hasn't been seen, we show onboarding
-        showOnboarding = !showOnboarding
+        // Default to showing onboarding
+        showOnboarding = true
+        
+        // Check in background
+        viewModelScope.launch {
+            val hasSeen = DataStoreUtil.hasSeenOnboarding(context)
+            showOnboarding = !hasSeen
+        }
     }
 
     if (showOnboarding) {
@@ -78,11 +67,12 @@ fun App() {
 
 @Composable
 fun MainApp() {
+    val navController = rememberNavController()
+    
     // We'll use a Scaffold with BottomNavigation for main app screens
     Scaffold(
         bottomBar = {
             BottomNavigation {
-                val navController = rememberNavController()
                 val currentDestination = navController.currentBackStackEntryAsState()
                 val currentRoute = currentDestination.value?.destination?.route
 
@@ -91,11 +81,57 @@ fun MainApp() {
                     label = { Text("Início") },
                     selected = currentRoute == "home",
                     onClick = {
-                        navController.navigate("home") {
-                            // Pop up to the start destination of the graph to avoid building up a large back stack
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.navigate("home")
+                    }
+                )
+
+                BottomNavigationItem(
+                    icon = { Icon(Icons.Default.ListAlt, contentDescription = null) },
+                    label = { Text("Repertório") },
+                    selected = currentRoute == "repertoire",
+                    onClick = {
+                        navController.navigate("repertoire")
+                    }
+                )
+
+                BottomNavigationItem(
+                    icon = { Icon(Icons.Default.NoteAlt, contentDescription = null) },
+                    label = { Text("Diário") },
+                    selected = currentRoute == "mood_journal",
+                    onClick = {
+                        navController.navigate("mood_journal")
+                    }
+                )
+            }
+        }
+    ) { padding ->
+        NavHost(
+            navController = navController,
+            startDestination = "home",
+            modifier = Modifier.padding(padding)
+        ) {
+            composable("home") {
+                MainScreen { action ->
+                    // Handle the action from the crisis button
+                    // For now, we'll just log it
+                }
+            }
+            composable("repertoire") {
+                RepertoireScreen(
+                    onAddActivity = { /* Handle if needed */ }
+                )
+            }
+            composable("mood_journal") {
+                JournalScreen(
+                    onAddTextureEntry = { description ->
+                        // This lambda is called when user adds a texture entry from the dialog
+                        // JournalScreen handles saving internally
+                    }
+                )
+            }
+        }
+    }
+}
                     }
                 )
                 BottomNavigationItem(
