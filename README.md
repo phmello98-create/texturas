@@ -4,7 +4,44 @@ Aplicativo Android (Kotlin + Jetpack Compose) para apoio em dependência e reca�
 
 ## Como Buildar o APK
 
-### Opção 1: GitHub Actions (Recomendado)
+### Opção 1: Replit (Grátis - Sem Cartão de Crédito!)
+
+**Mais fácil e rápida - 100% grátis sem pedir cartão!**
+
+1. Acesse: https://replit.com
+2. Crie conta gratuita (não pede cartão)
+3. Importe do GitHub: `phmello98-create/texturas`
+4. No terminal, execute:
+   ```bash
+   ./build-replit.sh
+   ```
+5. Aguarde o build (~5-10 minutos)
+6. Baixe o APK em: `app/build/outputs/apk/debug/app-debug.apk`
+
+📖 **Instruções completas em:** [BUILD-REPLIT.md](BUILD-REPLIT.md)
+
+### Opção 2: Gitpod (Online)
+
+1. **Clique no link direto:**
+   https://gitpod.io/#https://github.com/phmello98-create/texturas
+
+2. **Faça login com GitHub** (se pedir)
+
+3. **Aguarde o ambiente iniciar** (~2-3 minutos)
+   - O Android SDK será configurado automaticamente
+
+4. **No terminal, execute:**
+   ```bash
+   ./build.sh
+   ```
+
+5. **Aguarde o build completar** (~5 minutos)
+
+6. **Baixe o APK:**
+   - No painel lateral (Explorer), navegue até: `app/build/outputs/apk/debug/`
+   - Clique com botão direito em `app-debug.apk` → **Download**
+
+### Opção 2: GitHub Actions
 
 1. Acesse o repositório: https://github.com/phmello98-create/texturas
 2. Clique em **Actions** (Ações)
