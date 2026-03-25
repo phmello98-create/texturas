@@ -1,0 +1,47 @@
+# Configuração do Gitpod para Texturas
+# Este arquivo configura o ambiente automaticamente no Gitpod
+
+tasks:
+  - name: Setup Android SDK
+    init: |
+      echo "Configurando ambiente Android..."
+      # Instalar Android SDK
+      mkdir -p /workspace/android-sdk
+      export ANDROID_SDK_ROOT=/workspace/android-sdk
+      export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
+      
+      # Baixar command line tools
+      cd /workspace/android-sdk
+      wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+      unzip -q commandlinetools-linux-9477386_latest.zip
+      mkdir -p cmdline-tools/latest
+      mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
+      
+      # Aceitar licenças e instalar componentes necessários
+      yes | sdkmanager --licenses
+      sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+      
+      echo "✅ Android SDK configurado!"
+    command: |
+      export ANDROID_SDK_ROOT=/workspace/android-sdk
+      export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
+      echo "Ambiente pronto! Execute: ./gradlew assembleDebug"
+
+  - name: Build Project
+    init: |
+      echo "Preparando projeto..."
+      chmod +x gradlew
+      echo "✅ Projeto preparado!"
+
+# Portas para preview (se necessário)
+ports:
+  - port: 8080
+    onOpen: ignore
+
+# Extensões úteis do VS Code
+vscode:
+  extensions:
+    - vscjava.vscode-java-pack
+    - redhat.java
+    - vscjava.vscode-gradle
+    - mathiasfroehlich.kotlin
